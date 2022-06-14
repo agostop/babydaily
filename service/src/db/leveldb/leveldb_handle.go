@@ -24,10 +24,10 @@ var (
 var instance *LevelDbHandle
 
 func GetHandleInstance() *LevelDbHandle {
-	dbFolder := "./db"
-	if instance != nil {
-		return instance
-	}
+	return instance
+}
+
+func InitLevelDb(dbFolder string) *LevelDbHandle {
 
 	err := createDbPathIfNotExist(dbFolder)
 	if err != nil {
@@ -46,12 +46,12 @@ func GetHandleInstance() *LevelDbHandle {
 	return instance
 }
 
-func (h *LevelDbHandle) Put(key string, value []byte) error {
+func (h *LevelDbHandle) Put(key []byte, value []byte) error {
 	if value == nil {
 		log.Warn("the value is nil.")
 		return errors.New("the value is nil.")
 	}
-	err := h.db.Put([]byte(key), []byte(value), &opt.WriteOptions{Sync: false})
+	err := h.db.Put(key, value, &opt.WriteOptions{Sync: false})
 	if err != nil {
 		log.Errorf("writing failed. key [%#v]", key)
 		return errors.Wrapf(err, "error writing leveldb. key [%#v]", key)
@@ -60,8 +60,8 @@ func (h *LevelDbHandle) Put(key string, value []byte) error {
 	return err
 }
 
-func (h *LevelDbHandle) Delete(key string) error {
-	err := h.db.Delete([]byte(key), &opt.WriteOptions{Sync: false})
+func (h *LevelDbHandle) Delete(key []byte) error {
+	err := h.db.Delete(key, &opt.WriteOptions{Sync: false})
 	if err != nil {
 		log.Errorf("deleting key failed, key: [%#v]", key)
 		return errors.Wrapf(err, "error deleting leveldb, key: [%#v]", key)
@@ -69,15 +69,15 @@ func (h *LevelDbHandle) Delete(key string) error {
 	return err
 }
 
-func (h *LevelDbHandle) Get(key string) ([]byte, error) {
-	value, err := h.db.Get([]byte(key), nil)
+func (h *LevelDbHandle) Get(key []byte) ([]byte, error) {
+	value, err := h.db.Get(key, nil)
 	if err == leveldb.ErrNotFound {
 		value = nil
 		err = nil
 	}
 	if err != nil {
 		log.Errorf("getting leveldbprovider key [%#v], err:%s", key, err.Error())
-		return nil, errors.Wrapf(err, "error getting leveldbhandle key [%#v]", []byte(key))
+		return nil, errors.Wrapf(err, "error getting leveldbhandle key [%#v]", key)
 	}
 	return value, nil
 }
@@ -95,18 +95,30 @@ func (h *LevelDbHandle) BatchPut(batch *leveldb.Batch) error {
 	return nil
 }
 
-func (h *LevelDbHandle) IteratorWithPrefix(prefix string) ([]string, error) {
+func (h *LevelDbHandle) IteratorWithPrefix(prefix []byte) ([]string, error) {
 	if len(prefix) == 0 {
 		return nil, errors.Errorf("iterator prefix should not be empty key.")
 	}
 
-	result := []string{}
+	r := util.BytesPrefix(prefix)
+	return h.IteratorWithRange(r)
+}
 
-	r := util.BytesPrefix([]byte(prefix))
+func (h *LevelDbHandle) IteratorWithRange(r *util.Range) ([]string, error) {
+	if r == nil {
+		return nil, errors.Errorf("iterator prefix should not be empty key.")
+	}
+
+	result := []string{}
 	keyRange := &util.Range{Start: r.Start, Limit: r.Limit}
 	it := h.db.NewIterator(keyRange, nil)
 	defer it.Release()
-	for it.Next() {
+	b := it.Last()
+	if !b {
+		return nil, errors.Errorf("doesn't have any key.")
+	}
+	// 使用倒序输出
+	for it.Prev() {
 		result = append(result, string(it.Value()))
 	}
 	return result, nil
@@ -126,4 +138,13 @@ func createDbPathIfNotExist(path string) error {
 	}
 
 	return nil
+}
+
+func (h *LevelDbHandle) CleanAll() error {
+	it := h.db.NewIterator(nil, nil)
+	batch := &leveldb.Batch{}
+	for it.Next() {
+		batch.Delete(it.Key())
+	}
+	return h.BatchPut(batch)
 }

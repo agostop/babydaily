@@ -11,6 +11,8 @@ import (
 	"os"
 
 	"management_backend/src/config"
+	"management_backend/src/ctrl/common"
+	leveldbHandle "management_backend/src/db/leveldb"
 	loggers "management_backend/src/logger"
 	"management_backend/src/router"
 	"management_backend/src/utils"
@@ -46,6 +48,8 @@ func main() {
 	// 初始化数据库配置
 	// connection.InitDbConn(config.GlobalConfig.DBConf)
 	// http-server启动
+	ldh := leveldbHandle.InitLevelDb("./db")
+	common.InitAutoInc(ldh)
 
 	router.HttpServe(config.GlobalConfig.WebConf, staticContent)
 }

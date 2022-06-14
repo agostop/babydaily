@@ -60,6 +60,8 @@ func initControllers(routeGroup *gin.RouterGroup) {
 	routeGroup.POST(entity.BabyRecordAdd, baby_record.BabyRecordHandle)
 	routeGroup.POST(entity.BabyRecordDel, baby_record.BabyRecordDeleteHandle)
 	routeGroup.GET(entity.BabyRecordList, baby_record.BabyRecordListHandle)
+	routeGroup.POST(entity.BabyRecordEdit, baby_record.BabyRecordEditHandle)
+	routeGroup.POST(entity.BabyRecordMaintain, baby_record.BabyRecordMaintainHandle)
 }
 
 // Cors 跨域中间件

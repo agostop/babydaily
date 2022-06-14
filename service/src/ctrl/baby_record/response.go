@@ -8,6 +8,7 @@ type RecordResultView struct {
 	Type   int   `json:"type"`
 	Amount int   `json:"amount"`
 	Time   int64 `json:"time"`
+	Id     int   `json:"id"`
 }
 
 func NewRecordResultView(out []RecordMeta) []interface{} {
@@ -18,6 +19,7 @@ func NewRecordResultView(out []RecordMeta) []interface{} {
 			Type:   v.Type,
 			Amount: v.Amount,
 			Time:   v.Time,
+			Id:     v.Id,
 		}
 		resultView = append(resultView, r)
 	}

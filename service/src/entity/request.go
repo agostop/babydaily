@@ -5,12 +5,14 @@
 package entity
 
 const (
-	BabyRecordAdd  = "add"
-	BabyRecordDel  = "del"
-	BabyRecordList = "list"
-	Project        = "chainmaker"
-	CMB            = "cmb"
-	Token          = "token"
+	BabyRecordAdd      = "add"
+	BabyRecordDel      = "del"
+	BabyRecordList     = "list"
+	BabyRecordEdit     = "edit"
+	BabyRecordMaintain = "maintain"
+	Project            = "chainmaker"
+	CMB                = "cmb"
+	Token              = "token"
 
 	// 文件管理
 

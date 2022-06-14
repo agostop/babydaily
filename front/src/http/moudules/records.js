@@ -11,12 +11,12 @@ export const addRecord = (type, amount) => {
   })
 }
 
-export const delRecord = (ts) => {
+export const delRecord = (id) => {
   return axios({
     url: 'baby/del',
     method: 'post',
     data: {
-      ts: ts
+      id: id
     }
   })
 }
@@ -25,5 +25,18 @@ export const getRecord = (userId) => {
   return axios({
     url: 'baby/list',
     method: 'get'
+  })
+}
+
+export const editRecord = (id, type, amount, dateTime) => {
+  return axios({
+    url: 'baby/edit',
+    method: 'post',
+    data: {
+      id: id,
+      type: type,
+      amount: amount,
+      time: dateTime
+    }
   })
 }

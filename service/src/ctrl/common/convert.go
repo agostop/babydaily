@@ -5,6 +5,7 @@
 package common
 
 import (
+	"encoding/binary"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -74,4 +75,10 @@ func BindBody(ctx *gin.Context, body RequestBody) error {
 		return err
 	}
 	return nil
+}
+
+func ConvertIntToByte(id uint64) []byte {
+	b := make([]byte, 8)
+	binary.BigEndian.PutUint64(b, id)
+	return b
 }

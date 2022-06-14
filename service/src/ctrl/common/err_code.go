@@ -14,12 +14,13 @@ const (
 	ErrCodeOK ErrCode = 0
 
 	// 通用错误
-	ErrorParamWrong    ErrCode = 10001
-	ErrorHandleFailure ErrCode = 10002
-	InternalError      ErrCode = 10003
-	ErrorTokenNone     ErrCode = 10004
-	ErrorTokenExpired  ErrCode = 10005
-	ErrorTokenMismatch ErrCode = 10006
+	ErrorParamWrong     ErrCode = 10001
+	ErrorHandleFailure  ErrCode = 10002
+	InternalError       ErrCode = 10003
+	ErrorTokenNone      ErrCode = 10004
+	ErrorTokenExpired   ErrCode = 10005
+	ErrorTokenMismatch  ErrCode = 10006
+	ErrorRecordNotFound ErrCode = 10007
 
 	// 用户错误处理
 	ErrorUserExisted         ErrCode = 20001
@@ -113,13 +114,14 @@ const (
 )
 
 var ErrCodeName = map[ErrCode]string{
-	ErrCodeOK:          "ErrCodeOK",
-	ErrorParamWrong:    "ErrorParamWrong",
-	ErrorHandleFailure: "ErrorHandleFailure",
-	InternalError:      "InternalError",
-	ErrorTokenNone:     "ErrorTokenNone",
-	ErrorTokenExpired:  "ErrorTokenExpired",
-	ErrorTokenMismatch: "ErrorTokenMismatch",
+	ErrCodeOK:           "ErrCodeOK",
+	ErrorParamWrong:     "ErrorParamWrong",
+	ErrorHandleFailure:  "ErrorHandleFailure",
+	InternalError:       "InternalError",
+	ErrorTokenNone:      "ErrorTokenNone",
+	ErrorTokenExpired:   "ErrorTokenExpired",
+	ErrorTokenMismatch:  "ErrorTokenMismatch",
+	ErrorRecordNotFound: "ErrorRecordNotFound",
 
 	// 用户错误
 	ErrorUserExisted:         "ErrorUserExisted",
