@@ -14,7 +14,7 @@ web:
   # 加载链信息间隔时间，单位：秒
   load_period_seconds : 60
   # 默认admin用户密码，和重置用户密码
-  password: a123456
+  password: 
   # 日志agent 的端口
   agent_port: 22301
   # 上报日志链接
